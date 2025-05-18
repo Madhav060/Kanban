@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import './AuthForm.css';
 import axios from 'axios';
@@ -12,11 +12,16 @@ const AuthForm = () => {
     password: '',
     role: 'user',
   });
+  const [isAnimating, setIsAnimating] = useState(false);
   const formRef = useRef(null);
 
   const toggleForm = () => {
-    setForm({ name: '', email: '', password: '', role: 'user' });
-    setIsLogin(!isLogin);
+    setIsAnimating(true);
+    setTimeout(() => {
+      setForm({ name: '', email: '', password: '', role: 'user' });
+      setIsLogin(!isLogin);
+      setIsAnimating(false);
+    }, 500);
     if (document.activeElement) {
       document.activeElement.blur();
     }
@@ -58,52 +63,90 @@ const AuthForm = () => {
   };
 
   return (
-    <div className="auth-container">
-      <form onSubmit={handleSubmit} ref={formRef}>
-        <h2>{isLogin ? 'Login' : 'Signup'}</h2>
+    <div className="auth-container-wrapper">
+      <div className={`auth-container ${isAnimating ? 'flipping' : ''}`}>
+        <div className={`auth-form ${isLogin ? 'login' : 'signup'}`}>
+          <div className="form-header">
+            <h2>{isLogin ? 'Welcome Back!' : 'Create Account'}</h2>
+            <p>{isLogin ? 'Login to continue' : 'Join us today'}</p>
+          </div>
+          
+          <form onSubmit={handleSubmit} ref={formRef}>
+            {!isLogin && (
+              <>
+                <div className="input-group">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder=" "
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label>Full Name</label>
+                  <span className="input-highlight"></span>
+                </div>
 
-        {!isLogin && (
-          <>
-            <input
-              type="text"
-              name="name"
-              placeholder="Name"
-              value={form.name}
-              onChange={handleChange}
-              required
-            />
+                <div className="input-group">
+                  <select name="role" value={form.role} onChange={handleChange} required>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                  <label>Role</label>
+                  <span className="input-highlight"></span>
+                </div>
+              </>
+            )}
 
-            <select name="role" value={form.role} onChange={handleChange} required>
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
-          </>
-        )}
+            <div className="input-group">
+              <input
+                type="email"
+                name="email"
+                placeholder=" "
+                value={form.email}
+                onChange={handleChange}
+                required
+              />
+              <label>Email</label>
+              <span className="input-highlight"></span>
+            </div>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={handleChange}
-          required
-        />
+            <div className="input-group">
+              <input
+                type="password"
+                name="password"
+                placeholder=" "
+                value={form.password}
+                onChange={handleChange}
+                required
+                minLength="5"
+              />
+              <label>Password</label>
+              <span className="input-highlight"></span>
+            </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          required
-          minLength="5"
-        />
+            <button type="submit" className="submit-btn">
+              <span>{isLogin ? 'Login' : 'Sign Up'}</span>
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+                <path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path>
+              </svg>
+            </button>
+          </form>
 
-        <button type="submit">{isLogin ? 'Login' : 'Signup'}</button>
-        <p className="toggle-text" onClick={toggleForm}>
-          {isLogin ? "Don't have an account? Signup" : 'Already have an account? Login'}
-        </p>
-      </form>
+          <div className="form-footer">
+            <p>
+              {isLogin ? "Don't have an account?" : 'Already have an account?'}
+              <button className="toggle-btn" onClick={toggleForm}>
+                {isLogin ? 'Sign Up' : 'Login'}
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div className="decoration-circle circle-1"></div>
+      <div className="decoration-circle circle-2"></div>
+      <div className="decoration-circle circle-3"></div>
     </div>
   );
 };
