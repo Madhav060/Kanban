@@ -9,20 +9,23 @@ const Navbar = ({ handleLogout }) => {
 
   // Check auth status whenever the component mounts or localStorage changes
   useEffect(() => {
-    const checkAuth = () => {
-      const user = localStorage.getItem('user');
-      setIsAuthenticated(!!user);
-    };
+  const checkAuth = () => {
+    try {
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      setIsAuthenticated(!!storedUser && !!storedUser.email); // or use a field you expect
+    } catch (err) {
+      setIsAuthenticated(false);
+    }
+  };
 
-    checkAuth();
+  checkAuth();
 
-    // Listen for storage events (changes from other tabs)
-    window.addEventListener('storage', checkAuth);
-    
-    return () => {
-      window.removeEventListener('storage', checkAuth);
-    };
-  }, []);
+  window.addEventListener('storage', checkAuth);
+  return () => {
+    window.removeEventListener('storage', checkAuth);
+  };
+}, []);
+
 
   const handleAuthClick = () => {
     if (isAuthenticated) {

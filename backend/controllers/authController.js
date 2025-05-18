@@ -10,14 +10,25 @@ const adminLogin = {
 // Register Controller
 exports.register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ msg: "User already exists" });
 
     const hashed = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashed, role: "user" });
+
+    // Ensure the role is one of the allowed values
+    const allowedRoles = ['user', 'admin'];
+    const assignedRole = allowedRoles.includes(role) ? role : 'user';
+
+    const newUser = new User({
+      name,
+      email,
+      password: hashed,
+      role: assignedRole
+    });
+
     await newUser.save();
     res.status(201).json({ msg: "Registered successfully" });
   } catch (err) {
@@ -25,6 +36,7 @@ exports.register = async (req, res) => {
     res.status(500).json({ msg: "Registration failed" });
   }
 };
+
 
 // Login Controller
 exports.login = async (req, res) => {

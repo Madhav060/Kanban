@@ -10,11 +10,12 @@ const AuthForm = () => {
     name: '',
     email: '',
     password: '',
+    role: 'user',
   });
   const formRef = useRef(null);
 
   const toggleForm = () => {
-    setForm({ name: '', email: '', password: '' });
+    setForm({ name: '', email: '', password: '', role: 'user' });
     setIsLogin(!isLogin);
     if (document.activeElement) {
       document.activeElement.blur();
@@ -32,7 +33,7 @@ const AuthForm = () => {
     try {
       const payload = isLogin
         ? { email: form.email, password: form.password }
-        : { ...form, role: 'user' };
+        : { name: form.name, email: form.email, password: form.password, role: form.role };
 
       const { data } = await axios.post(`http://localhost:5000/api/auth/${endpoint}`, payload);
 
@@ -45,9 +46,9 @@ const AuthForm = () => {
         setIsLogin(true);
       }
 
-      setForm({ name: '', email: '', password: '' });
+      setForm({ name: '', email: '', password: '', role: 'user' });
       if (formRef.current) {
-        const inputs = formRef.current.querySelectorAll('input');
+        const inputs = formRef.current.querySelectorAll('input, select');
         inputs.forEach(input => input.blur());
       }
 
@@ -62,14 +63,21 @@ const AuthForm = () => {
         <h2>{isLogin ? 'Login' : 'Signup'}</h2>
 
         {!isLogin && (
-          <input
-            type="text"
-            name="name"
-            placeholder="Name"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
+          <>
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              value={form.name}
+              onChange={handleChange}
+              required
+            />
+
+            <select name="role" value={form.role} onChange={handleChange} required>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </>
         )}
 
         <input
