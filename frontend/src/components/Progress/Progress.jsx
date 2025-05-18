@@ -16,7 +16,7 @@ import {
 } from 'recharts';
 import './Progress.css';
 
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://kanban-b11u.onrender.com';
 const socket = io(API_URL);
 
 const TaskProgressPage = () => {

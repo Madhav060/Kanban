@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import './UserDash.css';
 
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://kanban-b11u.onrender.com';
 const statuses = ['To-Do', 'In-Progress', 'Done'];
 
 // Initialize socket connection

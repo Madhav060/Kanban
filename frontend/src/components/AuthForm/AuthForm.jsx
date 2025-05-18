@@ -40,7 +40,7 @@ const AuthForm = () => {
         ? { email: form.email, password: form.password }
         : { name: form.name, email: form.email, password: form.password, role: form.role };
 
-      const { data } = await axios.post(`http://localhost:5000/api/auth/${endpoint}`, payload);
+      const { data } = await axios.post(`https://kanban-b11u.onrender.com/api/auth/${endpoint}`, payload);
 
       if (isLogin) {
         localStorage.setItem('token', data.token);

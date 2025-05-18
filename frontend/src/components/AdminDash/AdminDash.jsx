@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import './AdminDash.css';
 
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://kanban-b11u.onrender.com';
 const socket = io(API_URL);
 
 const statuses = ['To-Do', 'In-Progress', 'Done'];
